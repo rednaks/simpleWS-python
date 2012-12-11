@@ -85,7 +85,7 @@ Location: ws://%s:%d/\r\n\
                    
 
         # Serve forever ...
-        def serve_forever(self,  aCustomFunction, aSize = 1024):
+        def serve_forever(self,  aCustomClass, aSize = 1024):
                 while True:
                         self.conn, self.addr = self.sock.accept()
                         msg = self.recvMSG(4096)
@@ -95,7 +95,10 @@ Location: ws://%s:%d/\r\n\
                                 while True:
                                         msg = self.recvMSG(aSize)
                                         if(msg):
-                                                aCustomFunction(self.decodeStream())
+                                                msgToSend, wantToSend = aCustomClass._onRecieve(self.decodeStream())
+                                                if(wantToSend):
+                                                        continue #Send is not supported yet
+
 
 
     
