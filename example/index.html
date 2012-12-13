@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Web Socket Example</title>
+    <meta charset="UTF-8">
+    <script>
+      	var server = prompt("server's ip address or domain ");
+        var s = new WebSocket("ws://"+server+":9000/");
+        s.onopen = function(e) { alert("opened"); }
+        s.onclose = function(e) { alert("closed"); }
+        s.onmessage = function(e) { alert("got: " + e.data); }
+      
+    </script>
+  </head>
+  <body>
+    <button onClick="s.send('Button1');">Button 1</button><br/>
+    <button onClick="s.send('Button2');">Button 2</button><br/>
+  </body>
+</html>
+
