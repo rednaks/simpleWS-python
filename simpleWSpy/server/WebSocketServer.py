@@ -95,7 +95,7 @@ Location: ws://%s:%d/\r\n\
         while True:
           msg = self.recvMSG(aSize)
           if(msg):
-            msgToSend, wantToSend = aCustomClass._onRecieve(self.decodeStream())
+            msgToSend, wantToSend = aCustomClass.onRecieve(self.decodeStream())
             if(wantToSend):
               continue #Send is not supported yet
   

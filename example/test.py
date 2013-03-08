@@ -4,7 +4,7 @@ class myClass:
   def __init__(self):
     self.msg = ''
 
-  def _onRecieve(self, msg):
+  def onRecieve(self, msg):
     print 'Msg printed from my Custom Class '
     print msg
     #return "Response", 1  # if I want to send something to the server
