@@ -83,6 +83,40 @@ Location: ws://%s:%d/\r\n\
 
     return ''.join(decodedStream)
                    
+  def encodeStream(self, aMsg):
+    decodedStream = aMsg
+    dLength = len(decodedStream)
+    
+    frame = []
+    frame.append(129)
+
+    if dLength <= 125:
+      frame.append(dLength)
+    elif dLength >= 126 and dLength <= 65535:
+      frame.append(126)
+      frame.append((dLength >> 8 ) & 255)
+      frame.append(dLength & 255)
+    else:
+      frame.append(127)
+      frame.append((dLength >> 56) & 255)
+      frame.append((dLength >> 48) & 255)
+      frame.append((dLength >> 40) & 255)
+      frame.append((dLength >> 32) & 255)
+      frame.append((dLength >> 24) & 255)
+      frame.append((dLength >> 16) & 255)
+      frame.append((dLength >> 8) & 255)
+      frame.append(dLength & 255)
+
+      
+    i = 0
+    while i < dLength:
+      frame.append(ord(decodedStream[i]))
+      i = i+1
+
+      buffer = [ chr(byte) for byte in frame]
+      return ''.join(buffer)
+    
+
 
 # Serve forever ...
   def serve_forever(self,  aCustomClass, aSize = 1024):
@@ -97,7 +131,8 @@ Location: ws://%s:%d/\r\n\
           if(msg):
             msgToSend, wantToSend = aCustomClass.onReceive(self.decodeStream())
             if(wantToSend):
-              continue #Send is not supported yet
+              bff = self.encodeStream(msgToSend)
+              self.sendMSG(bff+'\r\n')
   
 
 
