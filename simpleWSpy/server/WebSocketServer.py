@@ -120,12 +120,12 @@ Location: ws://%s:%d/\r\n\
 
 # Serve forever ...
   def serve_forever(self,  aCustomClass, aSize = 1024):
+    self.conn, self.addr = self.sock.accept()
     while True:
-      self.conn, self.addr = self.sock.accept()
       msg = self.recvMSG(4096)
       if(msg):
         self.handShake(msg)
-        print 'Accepted !'
+        print 'Connection established with client : %s:%d' % self.addr
         while True:
           msg = self.recvMSG(aSize)
           if(msg):
@@ -133,6 +133,15 @@ Location: ws://%s:%d/\r\n\
             if(wantToSend):
               bff = self.encodeStream(msgToSend)
               self.sendMSG(bff+'\r\n')
+          # Client disconnected
+          elif (not msg):
+            break
+        break
+
+    # We close the actual connection and get ready for a new one.
+    self.conn.close()
+    self.serve_forever(aCustomClass, aSize)
+          
   
 
 
